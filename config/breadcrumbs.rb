@@ -3,10 +3,14 @@ crumb :root do
 end
 
 crumb :files do |path|
-  components = path.split("/")
-  link components.last, "/files/#{path}"
-  if components.size > 1
-    parent :files, components[0...-1].join("/")
+  if path
+    components = path.split("/")
+    link components.last, "/files/#{path}"
+    if components.size > 1
+      parent :files, components[0...-1].join("/")
+    end
+  else
+    link "Files", files_path
   end
 end
 
