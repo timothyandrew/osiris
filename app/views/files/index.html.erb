@@ -1,0 +1,8 @@
+<% breadcrumb :files, @path %>
+
+<h1><%= @path %></h1>
+<ul class="files">
+  <% @files.each do |file| %>
+    <li><%= file.render.html_safe %></li>
+  <% end %>
+</ul>
