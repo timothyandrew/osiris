@@ -14,6 +14,7 @@ gem 'bootstrap-sass', '~> 3.3.4'
 gem 'figaro'
 gem 'puma'
 gem 'gretel'
+gem 'airbrake'
 
 group :development, :test do
   gem 'byebug'
