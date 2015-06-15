@@ -14,14 +14,17 @@ class S3File
     @file = file
   end
 
+  def url
+    @file.url(Time.now.to_i + 86400)
+  end
+
   def image_url
     key = ENV['EMBEDLY_KEY']
-    url = CGI::escape @file.url(Time.now.to_i + 86400)
-    "https://i.embed.ly/1/display/resize?key=#{key}&url=#{url}&width=150&grow=false"
+    "https://i.embed.ly/1/display/resize?key=#{key}&url=#{CGI::escape(url)}&width=150&grow=false"
   end
 
   def render
-    "<img src=#{image_url} target='_blank' />"
+    "<a target='_blank' href='#{url}'><img src=#{image_url} /></a>"
   end
 end
 
