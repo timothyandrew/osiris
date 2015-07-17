@@ -5,7 +5,7 @@ class S3Dir
 
   def render
     name = @prefix.split("/").last
-    "<a href='/files/#{@prefix}'>#{name}</a>"
+    "<a href=\"/files/#{@prefix}\">#{name}</a>"
   end
 end
 
