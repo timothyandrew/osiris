@@ -1,8 +1,23 @@
 ul.files li {
     display: inline-block;
-    width: 170px;
     margin: 10px;
     border: 1px solid black;
     padding: 8px;
     text-align: center;
+}
+
+ul.files li.dir {
+    width: 170px;
+}
+
+ul.files li.image {
+    width: 170px;
+}
+
+ul.files li.video {
+    width: 510px;
+}
+
+div.video-js {
+    display: inline-block;
 }
