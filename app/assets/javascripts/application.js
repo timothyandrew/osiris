@@ -15,4 +15,5 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
+//= require video.js
 //= require_tree .
