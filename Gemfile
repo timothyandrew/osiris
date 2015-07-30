@@ -16,7 +16,6 @@ gem 'figaro'
 gem 'puma'
 gem 'gretel'
 gem 'airbrake'
-gem 'devise'
 
 group :development, :test do
   gem 'byebug'
