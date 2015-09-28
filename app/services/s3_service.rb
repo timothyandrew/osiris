@@ -91,6 +91,6 @@ class S3Service
       S3File.create(file)
     end
     dirs = directory.files.common_prefixes.map { |prefix| S3Dir.new(prefix) }
-    [] + files + dirs
+    [] + files + dirs.reverse
   end
 end
