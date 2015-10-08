@@ -93,11 +93,15 @@ class S3Service
     [".jpg", ".png", ".gif"].include?(extension)
   end
 
-  def write_thumbnail(prefix)
-    thumbnail_file = S3File.new(@connection.directories.get('tim-mbp-backup', prefix: prefix, delimiter: '/').files.to_a.detect { |file| image?(file) })
-    thumbnail = thumbnail_file.url
-    ThumbnailCache.put(prefix, thumbnail, 6.days.from_now)
-    thumbnail
+  # Given a prefix, find all it's sub-directories, and cache a thumbnail for each one.
+  def write_thumbnails!(prefix)
+    sub_dirs = @connection.directories.get('tim-mbp-backup', prefix: prefix, delimiter: '/').files.common_prefixes
+    sub_dirs.each do |dir|
+      thumbnail_file = S3File.new(@connection.directories.get('tim-mbp-backup', prefix: dir, delimiter: '/').files.to_a.detect { |file| image?(file) })
+      thumbnail = thumbnail_file.url
+      ThumbnailCache.put(dir, thumbnail, 6.days.from_now)
+      thumbnail
+    end
   end
 
   def list(path)
@@ -110,7 +114,7 @@ class S3Service
       S3File.create(file)
     end
     dirs = directory.files.common_prefixes.map do |prefix|
-      thumbnail = ThumbnailCache.get(prefix).image_path || write_thumbnail(prefix)
+      thumbnail = ThumbnailCache.get(prefix).image_path
       S3Dir.new(prefix, thumbnail)
     end
     [] + files + dirs.reverse
