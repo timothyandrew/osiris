@@ -11,10 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150730100125) do
+ActiveRecord::Schema.define(version: 20151008030412) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "thumbnail_caches", force: :cascade do |t|
+    t.text     "directory_path"
+    t.text     "image_path"
+    t.datetime "expires_at"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "thumbnail_caches", ["directory_path", "expires_at"], name: "index_thumbnail_caches_on_directory_path_and_expires_at", unique: true, using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false

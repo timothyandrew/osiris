@@ -1,22 +1,33 @@
 class S3Dir
-  def initialize(prefix)
+  def initialize(prefix, thumbnail)
     @prefix = prefix
+    @thumbnail = thumbnail
   end
 
   def css_class
     "dir"
   end
 
+  def thumb_url
+    if @thumbnail
+      key = ENV['EMBEDLY_KEY']
+      "https://i.embed.ly/1/display/resize?key=#{key}&url=#{CGI::escape(@thumbnail)}&width=150&grow=false"
+    else
+      "https://placeholdit.imgix.net/~text?txtsize=14&txt=150%C3%97150&w=150&h=150"
+    end
+  end
+
   def render
     name = @prefix.split("/").last
-    "<a href=\"/files/#{@prefix}\">#{name}</a>"
+    "<img src='#{thumb_url}' />
+    <a href=\"/files/#{@prefix}\">#{name}</a>"
   end
 end
 
 class S3File
   def self.create(file)
     url = file.url(Time.now.to_i + 86400)
-    extension = File.extname(URI.parse(url).path)
+    extension = File.extname(URI.parse(url).path).downcase
     if [".jpg", ".png", ".gif"].include?(extension)
       ImageS3File.new(file)
     elsif [".mov", ".avi", ".mp4"].include?(extension)
@@ -35,7 +46,7 @@ class S3File
   end
 
   def url
-    @file.url(Time.now.to_i + 86400)
+    @file.url(Time.now.to_i + 86400) if @file # 1 week
   end
 
   def image_url
@@ -77,8 +88,16 @@ class S3Service
     @connection = Fog::Storage.new({provider: 'AWS', aws_access_key_id: ENV["AWS_ACCESS_KEY"], aws_secret_access_key: ENV["AWS_SECRET_KEY"]})
   end
 
-  def dir?(maybe_dir)
-    maybe_dir.is_a?(Fog::Storage::AWS::Files)
+  def image?(file)
+    extension = File.extname(file.key).downcase
+    [".jpg", ".png", ".gif"].include?(extension)
+  end
+
+  def write_thumbnail(prefix)
+    thumbnail_file = S3File.new(@connection.directories.get('tim-mbp-backup', prefix: prefix, delimiter: '/').files.to_a.detect { |file| image?(file) })
+    thumbnail = thumbnail_file.url
+    ThumbnailCache.put(prefix, thumbnail, 6.days.from_now)
+    thumbnail
   end
 
   def list(path)
@@ -90,7 +109,10 @@ class S3Service
     files = directory.files.map do |file|
       S3File.create(file)
     end
-    dirs = directory.files.common_prefixes.map { |prefix| S3Dir.new(prefix) }
+    dirs = directory.files.common_prefixes.map do |prefix|
+      thumbnail = ThumbnailCache.get(prefix).image_path || write_thumbnail(prefix)
+      S3Dir.new(prefix, thumbnail)
+    end
     [] + files + dirs.reverse
   end
 end
