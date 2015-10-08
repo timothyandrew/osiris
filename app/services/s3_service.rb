@@ -97,7 +97,7 @@ class S3Service
   def write_thumbnails!(prefix)
     sub_dirs = @connection.directories.get('tim-mbp-backup', prefix: prefix, delimiter: '/').files.common_prefixes
     sub_dirs.each do |dir|
-      thumbnail_file = S3File.new(@connection.directories.get('tim-mbp-backup', prefix: dir, delimiter: '/').files.to_a.detect { |file| image?(file) })
+      thumbnail_file = S3File.new(@connection.directories.get('tim-mbp-backup', prefix: dir, delimiter: '/').files.to_a.find_all { |file| image?(file) }.sample)
       thumbnail = thumbnail_file.url
       ThumbnailCache.put(dir, thumbnail, 6.days.from_now)
       thumbnail
