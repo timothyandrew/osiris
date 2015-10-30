@@ -1,6 +1,19 @@
 <% breadcrumb :files, @path %>
 
 <h1><%= @path %></h1>
+
+<% if user_signed_in? %>
+  <div class="panel panel-primary share-album-panel">
+    <div class="panel-heading">
+      <h3 class="panel-title">Share this Album</h3>
+    </div>
+    <div class="panel-body">
+      <input type="text" class="form-control" placeholder="Username" aria-describedby="sizing-addon1" value="<%= files_url(path: params[:path], share_key: @album.share_key) %>" readonly="true" />
+    </div>
+    <div class="panel-footer">Anyone with this link can view this album.</div>
+  </div>
+<% end %>
+
 <ul class="files">
   <% @files.each do |file| %>
     <li class='<%= file.css_class %>'><%= file.render.html_safe %></li>
