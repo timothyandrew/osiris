@@ -15,5 +15,5 @@ execute() {
     return $?
 }
 
-execute "/usr/local/bin/dokku run photos rake thumbnails:update"
+execute "cd /apps/osiris; bundle exec rake thumbnails:update"
 execute "curl https://nosnch.in/29d11f8d05"
