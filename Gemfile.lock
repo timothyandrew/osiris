@@ -202,9 +202,10 @@ GEM
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
     orm_adapter (0.5.0)
+    passenger (5.0.21)
+      rack
+      rake (>= 0.8.1)
     pg (0.18.2)
-    puma (2.11.3)
-      rack (>= 1.1, < 2.0)
     rack (1.6.1)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -287,8 +288,8 @@ DEPENDENCIES
   fog
   gretel
   jquery-rails
+  passenger
   pg
-  puma
   rails (= 4.2.1)
   rails_12factor
   sass-rails (~> 5.0)

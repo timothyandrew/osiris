@@ -1,7 +1,5 @@
 source 'https://rubygems.org'
 
-ruby '2.2.2'
-
 gem 'rails', '4.2.1'
 gem 'pg'
 gem 'sass-rails', '~> 5.0'
@@ -13,9 +11,9 @@ gem 'fog'
 gem 'devise'
 gem 'bootstrap-sass', '~> 3.3.4'
 gem 'figaro'
-gem 'puma'
 gem 'gretel'
 gem 'airbrake'
+gem 'passenger'
 
 group :development, :test do
   gem 'byebug'
