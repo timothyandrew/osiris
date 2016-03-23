@@ -12,15 +12,17 @@ class S3Dir
     if @thumbnail
       key = ENV['EMBEDLY_KEY']
       "https://i.embed.ly/1/display/resize?key=#{key}&url=#{CGI::escape(@thumbnail)}&width=150&grow=false"
-    else
-      "https://placeholdit.imgix.net/~text?txtsize=14&txt=150%C3%97150&w=150&h=150"
     end
   end
 
   def render
     name = @prefix.split("/").last
-    "<img src='#{thumb_url}' />
+    if thumb_url
+      "<img src='#{thumb_url}' />
     <a href=\"/files/#{@prefix}\">#{name}</a>"
+    else
+      "<a href=\"/files/#{@prefix}\">#{name}</a>"
+    end
   end
 end
 
