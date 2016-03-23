@@ -16,6 +16,8 @@
 
 <ul class="files">
   <% @files.each do |file| %>
-    <li class='<%= file.css_class %>'><%= file.render.html_safe %></li>
+    <% if file.render.present? %>
+      <li class='<%= file.css_class %>'><%= file.render.html_safe %></li>
+    <% end %>
   <% end %>
 </ul>

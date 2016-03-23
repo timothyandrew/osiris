@@ -57,7 +57,7 @@ class S3File
   end
 
   def render
-    "<a target='_blank' href='#{url}'><img src=#{image_url} /></a>"
+    ""
   end
 end
 
@@ -97,7 +97,7 @@ class S3Service
 
   # Given a prefix, find all it's sub-directories, and cache a thumbnail for each one.
   def write_thumbnails!(prefix)
-    sub_dirs = @connection.directories.get('tim-mbp-backup', prefix: prefix, delimiter: '/').files.common_prefixes
+    sub_dirs = @connection.directories.get('tim-mbp-backup', prefix: prefix, delimiter: '/').files.common_prefixes\
     sub_dirs.each { |dir| write_thumbnails!(dir) }
 
     thumbnail_file = S3File.new(@connection.directories.get('tim-mbp-backup', prefix: prefix, delimiter: '/').files.to_a.find_all { |file| image?(file) }.sample)
@@ -114,7 +114,7 @@ class S3Service
     else
       directory = @connection.directories.get('tim-mbp-backup', delimiter: '/')
     end
-    files = directory.files.map do |file|
+    files = directory.files.to_a.drop(1).map do |file|
       S3File.create(file)
     end
     dirs = directory.files.common_prefixes.map do |prefix|
