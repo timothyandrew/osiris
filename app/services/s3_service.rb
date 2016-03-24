@@ -97,8 +97,11 @@ class S3Service
 
   # Given a prefix, find all it's sub-directories, and cache a thumbnail for each one.
   def write_thumbnails!(prefix)
-    sub_dirs = @connection.directories.get('tim-mbp-backup', prefix: prefix, delimiter: '/').files.common_prefixes\
-    sub_dirs.each { |dir| write_thumbnails!(dir) }
+    sub_dirs = @connection.directories.get('tim-mbp-backup', prefix: prefix, delimiter: '/').files.common_prefixes
+
+    if sub_dirs
+      sub_dirs.each { |dir| write_thumbnails!(dir) }
+    end
 
     thumbnail_file = S3File.new(@connection.directories.get('tim-mbp-backup', prefix: prefix, delimiter: '/').files.to_a.find_all { |file| image?(file) }.sample)
     if thumbnail_file
