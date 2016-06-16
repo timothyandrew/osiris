@@ -1,0 +1,13 @@
+<script type="text/javascript">
+ $("select#per_page").change(function() {
+
+   if(_.isEmpty(window.location.search)) {
+     var params = {per_page: $(this).val()};
+   } else {
+     var params = $.getQueryParameters(window.location.search);
+     params = _.extend(params, {per_page: $(this).val()});
+   }
+
+   window.location.href = window.location.origin + window.location.pathname + '?' + $.param(params);
+ });
+</script>

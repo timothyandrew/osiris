@@ -5,7 +5,7 @@ class FilesController < ApplicationController
 
   def index
     @path = params[:path].presence
-    @files = S3Service.new.list(@path)
+    @files = Kaminari.paginate_array(S3Service.new.list(@path)).page(params[:page]).per(params[:per_page].presence || 100)
   end
 
   private

@@ -14,6 +14,8 @@ gem 'figaro'
 gem 'gretel'
 gem 'airbrake'
 gem 'passenger'
+gem 'kaminari'
+gem 'underscore-rails'
 
 group :development, :test do
   gem 'byebug'
@@ -21,6 +23,7 @@ group :development, :test do
   gem 'spring'
   gem "better_errors"
   gem "binding_of_caller"
+  gem 'thin'
 end
 
 group :production do
