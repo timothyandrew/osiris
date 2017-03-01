@@ -1,4 +1,6 @@
-class S3Dir
+require "google/cloud/storage"
+
+class GoogleStorageDir
   def initialize(prefix, thumbnail)
     @prefix = prefix
     @thumbnail = thumbnail
@@ -26,16 +28,17 @@ class S3Dir
   end
 end
 
-class S3File
+class GoogleStorageFile
   def self.create(file)
-    url = file.url(Time.now.to_i + 86400)
+    url = file.signed_url(method: "GET", expires: 86400)
     extension = File.extname(URI.parse(url).path).downcase
+
     if [".jpg", ".png", ".gif"].include?(extension)
-      ImageS3File.new(file)
+      ImageGoogleStorageFile.new(file)
     elsif [".mov", ".avi", ".mp4"].include?(extension)
-      VideoS3File.new(file)
+      VideoGoogleStorageFile.new(file)
     else
-      S3File.new(file)
+      GoogleStorageFile.new(file)
     end
   end
 
@@ -48,7 +51,7 @@ class S3File
   end
 
   def url
-    @file.url(Time.now.to_i + 86400) if @file # 1 week
+    @file.signed_url(method: "GET", expires: 86400) if @file
   end
 
   def image_url
@@ -61,7 +64,7 @@ class S3File
   end
 end
 
-class ImageS3File < S3File
+class ImageGoogleStorageFile < GoogleStorageFile
   def render
     "<a target='_blank' href='#{url}'><img src=#{image_url} /></a>"
   end
@@ -71,7 +74,7 @@ class ImageS3File < S3File
   end
 end
 
-class VideoS3File < S3File
+class VideoGoogleStorageFile < GoogleStorageFile
   def render
     "<video width='490' height='200' controls class='video-js vjs-default-skin vjs-big-play-centered' preload='metadata' data-setup='{}'>
        <source src='#{url}' type='video/mp4'>
@@ -85,25 +88,31 @@ class VideoS3File < S3File
 end
 
 
-class S3Service
+class GoogleStorageService
   def initialize
-    @connection = Fog::Storage.new({provider: 'AWS', aws_access_key_id: ENV["AWS_ACCESS_KEY"], aws_secret_access_key: ENV["AWS_SECRET_KEY"]})
+    @storage = Google::Cloud::Storage.new(
+      project: ENV["GOOGLE_PROJECT"],
+      keyfile: ENV["GOOGLE_KEYFILE"]
+    )
+
+    @bucket = @storage.bucket("rakshitha-tim-photos")
   end
 
   def image?(file)
-    extension = File.extname(file.key).downcase
+    extension = File.extname(file.name).downcase
     [".jpg", ".png", ".gif"].include?(extension)
   end
 
   # Given a prefix, find all it's sub-directories, and cache a thumbnail for each one.
   def write_thumbnails!(prefix)
-    sub_dirs = @connection.directories.get('tim-mbp-backup', prefix: prefix, delimiter: '/').files.common_prefixes
+    sub_dirs = @bucket.files(prefix: prefix, delimiter: '/').prefixes
 
     if sub_dirs
       sub_dirs.each { |dir| write_thumbnails!(dir) }
     end
 
-    thumbnail_file = S3File.new(@connection.directories.get('tim-mbp-backup', prefix: prefix, delimiter: '/').files.to_a.find_all { |file| image?(file) }.sample)
+    thumbnail_file = GoogleStorageFile.new(@bucket.files(prefix: prefix, delimiter: '/').to_a.find_all { |file| image?(file) }.sample)
+
     if thumbnail_file
       thumbnail = thumbnail_file.url
       ThumbnailCache.put(prefix, thumbnail, 6.days.from_now)
@@ -112,18 +121,17 @@ class S3Service
   end
 
   def list(path)
-    if path.present?
-      directory = @connection.directories.get('tim-mbp-backup', prefix: "#{path}/", delimiter: '/')
-    else
-      directory = @connection.directories.get('tim-mbp-backup', delimiter: '/')
-    end
-    files = directory.files.to_a.drop(1).map do |file|
-      S3File.create(file)
-    end
-    dirs = directory.files.common_prefixes.map do |prefix|
+    files = if path.present?
+              @bucket.files(prefix: "#{path}/", delimiter: "/")
+            else
+              @bucket.files(delimiter: "/")
+            end
+
+    directories = files.prefixes.map do |prefix|
       thumbnail = ThumbnailCache.get(prefix).image_path
-      S3Dir.new(prefix, thumbnail)
+      GoogleStorageDir.new(prefix, thumbnail)
     end
-    [] + files + dirs.reverse
+
+    [] + files.map { |file| GoogleStorageFile.create(file) } + directories.reverse
   end
 end

@@ -1,7 +1,6 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    CFPropertyList (2.3.1)
     actionmailer (4.2.1)
       actionpack (= 4.2.1)
       actionview (= 4.2.1)
@@ -37,6 +36,8 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
+    addressable (2.5.0)
+      public_suffix (~> 2.0, >= 2.0.2)
     airbrake (4.1.0)
       builder
       multi_json
@@ -54,7 +55,7 @@ GEM
     bootstrap-sass (3.3.4.1)
       autoprefixer-rails (>= 5.0.0.1)
       sass (>= 3.2.19)
-    builder (3.2.2)
+    builder (3.2.3)
     byebug (5.0.0)
       columnize (= 0.9.0)
     coderay (1.1.0)
@@ -75,144 +76,78 @@ GEM
       responders
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
+    digest-crc (0.4.1)
     erubis (2.7.0)
     eventmachine (1.2.0.1)
-    excon (0.45.3)
     execjs (2.5.2)
+    faraday (0.11.0)
+      multipart-post (>= 1.2, < 3)
     figaro (1.1.0)
       thor (~> 0.14)
-    fission (0.5.0)
-      CFPropertyList (~> 2.2)
-    fog (1.30.0)
-      fog-atmos
-      fog-aws (~> 0.0)
-      fog-brightbox (~> 0.4)
-      fog-core (~> 1.27, >= 1.27.4)
-      fog-ecloud
-      fog-google (>= 0.0.2)
-      fog-json
-      fog-local
-      fog-powerdns (>= 0.1.1)
-      fog-profitbricks
-      fog-radosgw (>= 0.0.2)
-      fog-riakcs
-      fog-sakuracloud (>= 0.0.4)
-      fog-serverlove
-      fog-softlayer
-      fog-storm_on_demand
-      fog-terremark
-      fog-vmfusion
-      fog-voxel
-      fog-xml (~> 0.1.1)
-      ipaddress (~> 0.5)
-      nokogiri (~> 1.5, >= 1.5.11)
-    fog-atmos (0.1.0)
-      fog-core
-      fog-xml
-    fog-aws (0.2.2)
-      fog-core (~> 1.27)
-      fog-json (~> 1.0)
-      fog-xml (~> 0.1)
-      ipaddress (~> 0.8)
-    fog-brightbox (0.7.1)
-      fog-core (~> 1.22)
-      fog-json
-      inflecto (~> 0.0.2)
-    fog-core (1.30.0)
-      builder
-      excon (~> 0.45)
-      formatador (~> 0.2)
-      mime-types
-      net-scp (~> 1.1)
-      net-ssh (>= 2.1.3)
-    fog-ecloud (0.1.1)
-      fog-core
-      fog-xml
-    fog-google (0.0.5)
-      fog-core
-      fog-json
-      fog-xml
-    fog-json (1.0.1)
-      fog-core (~> 1.0)
-      multi_json (~> 1.0)
-    fog-local (0.2.1)
-      fog-core (~> 1.27)
-    fog-powerdns (0.1.1)
-      fog-core (~> 1.27)
-      fog-json (~> 1.0)
-      fog-xml (~> 0.1)
-    fog-profitbricks (0.0.2)
-      fog-core
-      fog-xml
-      nokogiri
-    fog-radosgw (0.0.4)
-      fog-core (>= 1.21.0)
-      fog-json
-      fog-xml (>= 0.0.1)
-    fog-riakcs (0.1.0)
-      fog-core
-      fog-json
-      fog-xml
-    fog-sakuracloud (1.0.1)
-      fog-core
-      fog-json
-    fog-serverlove (0.1.2)
-      fog-core
-      fog-json
-    fog-softlayer (0.4.6)
-      fog-core
-      fog-json
-    fog-storm_on_demand (0.1.1)
-      fog-core
-      fog-json
-    fog-terremark (0.1.0)
-      fog-core
-      fog-xml
-    fog-vmfusion (0.1.0)
-      fission
-      fog-core
-    fog-voxel (0.1.0)
-      fog-core
-      fog-xml
-    fog-xml (0.1.2)
-      fog-core
-      nokogiri (~> 1.5, >= 1.5.11)
     foreman (0.78.0)
       thor (~> 0.19.1)
-    formatador (0.2.5)
     globalid (0.3.5)
       activesupport (>= 4.1.0)
+    google-api-client (0.9.28)
+      addressable (~> 2.3)
+      googleauth (~> 0.5)
+      httpclient (~> 2.7)
+      hurley (~> 0.1)
+      memoist (~> 0.11)
+      mime-types (>= 1.6)
+      representable (~> 2.3.0)
+      retriable (~> 2.0)
+    google-cloud-core (0.21.1)
+      googleauth (~> 0.5.1)
+    google-cloud-storage (0.23.2)
+      digest-crc (~> 0.4)
+      google-api-client (~> 0.9.11)
+      google-cloud-core (~> 0.21.0)
+    googleauth (0.5.1)
+      faraday (~> 0.9)
+      jwt (~> 1.4)
+      logging (~> 2.0)
+      memoist (~> 0.12)
+      multi_json (~> 1.11)
+      os (~> 0.9)
+      signet (~> 0.7)
     gretel (3.0.8)
       rails (>= 3.2.0)
+    httpclient (2.8.3)
+    hurley (0.2)
     i18n (0.7.0)
-    inflecto (0.0.2)
-    ipaddress (0.8.0)
     jquery-rails (4.0.3)
       rails-dom-testing (~> 1.0)
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
-    json (1.8.3)
+    json (1.8.6)
+    jwt (1.5.6)
     kaminari (0.17.0)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
+    little-plugger (1.1.4)
+    logging (2.1.0)
+      little-plugger (~> 1.1)
+      multi_json (~> 1.10)
     loofah (2.0.2)
       nokogiri (>= 1.5.9)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
-    mime-types (2.6.1)
-    mini_portile (0.6.2)
+    memoist (0.15.0)
+    mime-types (2.99.3)
+    mini_portile2 (2.1.0)
     minitest (5.7.0)
-    multi_json (1.11.1)
-    net-scp (1.2.1)
-      net-ssh (>= 2.6.5)
-    net-ssh (2.9.2)
-    nokogiri (1.6.6.2)
-      mini_portile (~> 0.6.0)
+    multi_json (1.12.1)
+    multipart-post (2.0.0)
+    nokogiri (1.6.8.1)
+      mini_portile2 (~> 2.1.0)
     orm_adapter (0.5.0)
+    os (0.9.6)
     passenger (5.0.21)
       rack
       rake (>= 0.8.1)
     pg (0.18.2)
+    public_suffix (2.0.5)
     rack (1.6.1)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -246,8 +181,11 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (10.4.2)
+    representable (2.3.0)
+      uber (~> 0.0.7)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
+    retriable (2.1.0)
     sass (3.4.14)
     sass-rails (5.0.3)
       railties (>= 4.0.0, < 5.0)
@@ -255,6 +193,11 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (~> 1.1)
+    signet (0.7.3)
+      addressable (~> 2.3)
+      faraday (~> 0.9)
+      jwt (~> 1.5)
+      multi_json (~> 1.10)
     spring (1.3.6)
     sprockets (3.2.0)
       rack (~> 1.0)
@@ -273,6 +216,7 @@ GEM
       coffee-rails
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    uber (0.0.15)
     uglifier (2.7.1)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
@@ -297,8 +241,8 @@ DEPENDENCIES
   coffee-rails (~> 4.1.0)
   devise
   figaro
-  fog
   foreman
+  google-cloud-storage
   gretel
   jquery-rails
   kaminari
@@ -315,4 +259,4 @@ DEPENDENCIES
   web-console (~> 2.0)
 
 BUNDLED WITH
-   1.12.5
+   1.14.3
