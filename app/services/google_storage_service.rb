@@ -66,7 +66,7 @@ end
 
 class ImageGoogleStorageFile < GoogleStorageFile
   def render
-    "<a target='_blank' href='#{url}'><img src=#{image_url} /></a>"
+    "<a target=\"_blank\" href=\"#{url}\"><img src=#{image_url} /></a>"
   end
 
   def css_class
@@ -76,8 +76,8 @@ end
 
 class VideoGoogleStorageFile < GoogleStorageFile
   def render
-    "<video width='490' height='200' controls class='video-js vjs-default-skin vjs-big-play-centered' preload='metadata' data-setup='{}'>
-       <source src='#{url}' type='video/mp4'>
+    "<video width=\"490\" height=\"200\" controls class=\"video-js vjs-default-skin vjs-big-play-centered\" preload=\"metadata\" data-setup=\"{}\">
+       <source src=\"#{url}\" type=\"video/mp4\">
      </video>
     "
   end
